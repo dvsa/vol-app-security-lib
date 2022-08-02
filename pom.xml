@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.dvsa.testing.lib</groupId>
+  <artifactId>zap-scanner-suite</artifactId>
+  <version>0.7</version>
+
+  <properties>
+    <apache-log4j.version>2.17.1</apache-log4j.version>
+    <zap-clientapi.version>1.10.0</zap-clientapi.version>
+    <nexus.releases>https://nexus.olcs.dev-dvsacloud.uk/repository/maven-releases</nexus.releases>
+    <nexus.snapshots>https://nexus.olcs.dev-dvsacloud.uk/repository/maven-snapshots</nexus.snapshots>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.zaproxy</groupId>
+      <artifactId>zap-clientapi</artifactId>
+      <version>${zap-clientapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${apache-log4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${apache-log4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <!--  Nexus Configuration  -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>maven-snapshots</id>
+      <url>${nexus.snapshots}</url>
+    </snapshotRepository>
+    <repository>
+      <id>maven-releases</id>
+      <url>${nexus.releases}</url>
+    </repository>
+  </distributionManagement>
+</project>
