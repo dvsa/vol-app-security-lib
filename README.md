@@ -10,3 +10,6 @@ Use the following command ```mvn clean install```
 
 ## Remote Deployment
 Use the following command ```mvn clean deploy```
+
+## To instantiate use the following 
+```ScannerMethods xx = new ScannerMethods();```
