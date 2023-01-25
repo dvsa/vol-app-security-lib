@@ -2,27 +2,21 @@ package scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
 import org.zaproxy.clientapi.core.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import static java.lang.Thread.sleep;
 
 public class ScannerMethods {
     private static String scanId = null;
     private static String user = "VOLUser";
     private static int progress;
 
-    private ClientApi clientApi;
+    private final ClientApi clientApi;
     private ApiResponse response;
 
     private String reportURL;
@@ -84,7 +78,7 @@ public class ScannerMethods {
 
     public void createReport(String reportName, String reportURL) {
         this.reportURL = reportURL;
-        Long seconds = Instant.now().getEpochSecond();
+        long seconds = Instant.now().getEpochSecond();
         LocalDate date = LocalDate.now();
         File dir = new File("Reports");
         if (!dir.exists()) {
@@ -162,7 +156,7 @@ public class ScannerMethods {
     /**
      * @param siteUrl
      * @param loginRequest
-     * @throws Exception Method for creating a user and setting an auth method https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAuthentication
+     * @throws Exception Method for creating a user and setting an auth method <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAuthentication">...</a>
      *                   Supported Auth methods: manualAuthentication,formBasedAuthentication,jsonBasedAuthentication,http_ntlm_Authentication,scriptBasedAuthentication
      */
     public void setAuthenticationMethod(String siteUrl, String loginRequest, String authentication) throws Exception {
@@ -358,10 +352,6 @@ public class ScannerMethods {
         this.clientApi.spider.addDomainAlwaysInScope(domain, "", "true");
     }
 
-    public void generateRootCA() throws ClientApiException {
-        this.clientApi.core.generateRootCA();
-    }
-
     /**
      * @param policyName
      * @param attackStrength LOW,MEDIUM,HIGH,INSANE
@@ -380,40 +370,33 @@ public class ScannerMethods {
 
     /**
      * @param url
-     * @throws Exception To be used when scanning as a logged in user
+     * @throws Exception Only logged-in users can see this feature
      */
     public void performSpiderCrawlAsUser(String url) throws Exception {
         response = clientApi.spider.scanAsUser(CONTEXT_ID, userId, url, null, "true", "true");
         scanId = ((ApiResponseElement) response).getValue();
-        while (true) {
+        while (progress < 100) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.spider.status(scanId)).getValue());
             LOGGER.info("Static scan in progress : " + progress + "%");
-            if (progress >= 100) {
-                break;
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        }
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * @param url
-     * @throws Exception To be used as a logged in user
      */
     public void performActiveAttackAsUser(String url) throws ClientApiException {
         response = clientApi.ascan.scanAsUser(url, CONTEXT_ID, userId, "true", "Default Policy", null, null);
         scanId = ((ApiResponseElement) response).getValue();
-        while (true) {
+        while (progress < 100) {
             progress = Integer.parseInt(((ApiResponseElement) clientApi.ascan.status(scanId)).getValue());
             LOGGER.info("Dynamic scan in progress : " + progress + "%");
-            if (progress >= 100) {
-                break;
-            }
             try {
-                Thread.sleep(3000);
+                sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -422,7 +405,7 @@ public class ScannerMethods {
 
     /**
      * @param url
-     * @throws Exception To be used when scanning as a logged in user
+     * @throws Exception Only logged-in users can see this feature
      */
     public void performAJAXSpiderCrawlAsUser(String username, String url) throws Exception {
         response = clientApi.ajaxSpider.scanAsUser(CONTEXT_ID, user, url, "true");
@@ -431,7 +414,7 @@ public class ScannerMethods {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.ajaxSpider.status()).getValue());
             LOGGER.info("Ajax scan in progress : " + progress + "%");
             try {
-                Thread.sleep(5000);
+                sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -450,7 +433,7 @@ public class ScannerMethods {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.spider.status(scanId)).getValue());
             LOGGER.info("Static scan in progress : " + progress + "%");
             try {
-                Thread.sleep(5000);
+                sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -468,7 +451,7 @@ public class ScannerMethods {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.ascan.status(scanId)).getValue());
             LOGGER.info("Dynamic scan in progress : " + progress + "%");
             try {
-                Thread.sleep(3000);
+                sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
