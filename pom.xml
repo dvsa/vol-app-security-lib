@@ -5,13 +5,14 @@
 
   <groupId>org.dvsa.testing.lib</groupId>
   <artifactId>zap-scanner-suite</artifactId>
-  <version>0.8</version>
+  <version>0.9</version>
 
   <properties>
-    <apache-log4j.version>2.17.1</apache-log4j.version>
-    <zap-clientapi.version>1.11.0</zap-clientapi.version>
+    <apache-log4j.version>2.22.0</apache-log4j.version>
+    <zap-clientapi.version>1.13.0</zap-clientapi.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.version>3.8.1</maven.compiler.version>
     <nexus.releases>https://nexus.olcs.dev-dvsacloud.uk/repository/maven-releases</nexus.releases>
-    <nexus.snapshots>https://nexus.olcs.dev-dvsacloud.uk/repository/maven-snapshots</nexus.snapshots>
   </properties>
 
   <build>
@@ -19,9 +20,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
         <configuration>
-          <source>8</source>
-          <target>8</target>
+          <release>11</release>
         </configuration>
       </plugin>
     </plugins>
@@ -47,10 +48,6 @@
 
   <!--  Nexus Configuration  -->
   <distributionManagement>
-    <snapshotRepository>
-      <id>maven-snapshots</id>
-      <url>${nexus.snapshots}</url>
-    </snapshotRepository>
     <repository>
       <id>maven-releases</id>
       <url>${nexus.releases}</url>
