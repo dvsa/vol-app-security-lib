@@ -347,7 +347,7 @@ public class ScannerMethods {
     }
 
     public void enableActiveScannerByName(String policyName) throws Exception {
-        this.clientApi.ascan.enableScanners(setPolicyId(policyName), DEFAULT_POLICY);
+        this.clientApi.ascan.enableScanners(setPolicyId(policyName), policyName);
     }
 
     public void addDomainThatIsAlwaysInScope(String domain) throws ClientApiException {
@@ -397,8 +397,8 @@ public class ScannerMethods {
     /**
      * @param url
      */
-    public void performActiveAttackAsUser(String url) throws ClientApiException {
-        response = clientApi.ascan.scanAsUser(url, CONTEXT_ID, userId, "false", "Default Policy", null, null);
+    public void performActiveAttackAsUser(String url, String policy) throws ClientApiException {
+        response = clientApi.ascan.scanAsUser(url, CONTEXT_ID, userId, "false", policy, null, null);
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) clientApi.ascan.status(scanId)).getValue());
@@ -461,8 +461,8 @@ public class ScannerMethods {
      * @param url
      * @throws Exception
      */
-    public void performActiveAttack(String url) throws Exception {
-        response = this.clientApi.ascan.scan(url, "false", "true", "Default Policy", null, null);
+    public void performActiveAttack(String url, String policy) throws Exception {
+        response = this.clientApi.ascan.scan(url, "false", "true", policy, null, null);
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.ascan.status(scanId)).getValue());
