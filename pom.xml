@@ -12,7 +12,7 @@
     <zap-clientapi.version>1.13.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.8.1</maven.compiler.version>
-    <nexus.releases>https://nexus.olcs.dev-dvsacloud.uk/repository/maven-releases</nexus.releases>
+    <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
   </properties>
 
   <build>
@@ -47,10 +47,20 @@
   </dependencies>
 
   <!--  Nexus Configuration  -->
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub dvsa Apache Maven Packages</name>
+      <url>${github.url}</url>
+    </repository>
+  </repositories>
+
   <distributionManagement>
     <repository>
-      <id>maven-releases</id>
-      <url>${nexus.releases}</url>
+      <id>github</id>
+      <name>GitHub dvsa Apache Maven Packages</name>
+      <url>${github.url}</url>
     </repository>
   </distributionManagement>
+
 </project>
