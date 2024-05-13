@@ -42,7 +42,7 @@ jobs:
             cache: 'maven'
             
         - name: Publish to GitHub Packages Apache Maven
-          uses: ./.github/workflows/maven.yaml
+          uses: ./.github/actions.yamal
           with:
             maven-goal: deploy
           env:
