@@ -12,7 +12,7 @@
     <zap-clientapi.version>1.13.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.8.1</maven.compiler.version>
-   <github.url>https://maven.pkg.github.com/dvsa/*</github.url>
+   <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
   </properties>
 
   <build>
