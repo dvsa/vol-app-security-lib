@@ -4,7 +4,7 @@
 
   <groupId>org.dvsa.testing.lib</groupId>
   <artifactId>zap-scanner-suite</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
 
   <properties>
     <apache-log4j.version>2.22.0</apache-log4j.version>
