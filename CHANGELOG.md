@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/dvsa/vol-app-security-lib/compare/v1.0.0...v1.0.1) (2025-05-20)
+
+
+### Miscellaneous Chores
+
+* bump to 1.0.1 ([f59f7d5](https://github.com/dvsa/vol-app-security-lib/commit/f59f7d5633b558617bfb7d384c7fa7ae8c920329))
+* bump to 1.0.1 ([5584b34](https://github.com/dvsa/vol-app-security-lib/commit/5584b341236eb5133f73a3286c6177de60df11de))
+
 ## 1.0.0 (2024-05-20)
 
 
