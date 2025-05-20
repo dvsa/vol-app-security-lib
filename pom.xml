@@ -4,11 +4,11 @@
 
   <groupId>org.dvsa.testing.lib</groupId>
   <artifactId>zap-scanner-suite</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <properties>
-    <apache-log4j.version>2.22.0</apache-log4j.version>
-    <zap-clientapi.version>1.13.0</zap-clientapi.version>
+    <apache-log4j.version>2.24.3</apache-log4j.version>
+    <zap-clientapi.version>1.16.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.8.1</maven.compiler.version>
    <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>

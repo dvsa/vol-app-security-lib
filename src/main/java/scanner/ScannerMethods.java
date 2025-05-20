@@ -6,6 +6,7 @@ import org.zaproxy.clientapi.core.*;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 
@@ -21,7 +22,6 @@ public class ScannerMethods {
     private String userId;
     private final String CONTEXT_ID = "1";
     private final String CONTEXTS = "Default Context";
-    private final String DEFAULT_POLICY = "Default Policy";
 
 
     private static final Logger LOGGER = LogManager.getLogger(ScannerMethods.class);
@@ -34,17 +34,15 @@ public class ScannerMethods {
      * Method for creating summary table for HTML report
      */
     private String createReportSummaryTable() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table width=45% border=0>").append("<tr bgcolor=#666666>")
-                .append("<td width=45% height=24>").append("<strong>").append("<font color=#FFFFFF size=2 face=Arial, Helvetica, sans-serif>URLs SCANNED").append("</font></strong></td></tr>")
-                .append("<tr bgcolor=#e8e8e8>")
-                .append(String.format("<td><font size=2 face=Arial, Helvetica, sans-serif><a href=#%s>%s</a></font></td>", this.reportURL, this.reportURL))
-                .append("</tr>")
-                .append("<p></p>")
-                .append("<p></p>")
-                .append("<p></p>")
-                .append("<p></p>");
-        return sb.toString();
+        return "<table width=45% border=0>" + "<tr bgcolor=#666666>" +
+                "<td width=45% height=24>" + "<strong>" + "<font color=#FFFFFF size=2 face=Arial, Helvetica, sans-serif>URLs SCANNED" + "</font></strong></td></tr>" +
+                "<tr bgcolor=#e8e8e8>" +
+                String.format("<td><font size=2 face=Arial, Helvetica, sans-serif><a href=#%s>%s</a></font></td>", this.reportURL, this.reportURL) +
+                "</tr>" +
+                "<p></p>" +
+                "<p></p>" +
+                "<p></p>" +
+                "<p></p>";
     }
 
     /**
@@ -86,7 +84,7 @@ public class ScannerMethods {
             this.clientApi.reports.generate(reportName, "traditional-html", null, null, null,
                     null, null, null, null, reportName.concat(date + " -" + seconds), null, System.getProperty("user.dir").concat("/" + dir), null);
         } catch (ClientApiException e) {
-            e.printStackTrace();
+            LOGGER.info(e);
         }
     }
 
@@ -106,7 +104,7 @@ public class ScannerMethods {
         try {
             this.clientApi.core.shutdown();
         } catch (ClientApiException e) {
-            e.printStackTrace();
+            LOGGER.info(e);
         }
     }
 
@@ -143,7 +141,6 @@ public class ScannerMethods {
     }
 
     /**
-     * @param CONTEXT_NAME
      * @param url
      * @throws ClientApiException
      */
@@ -159,11 +156,11 @@ public class ScannerMethods {
      */
     public void setAuthenticationMethod(String siteUrl, String loginRequest, String authentication) throws Exception {
 
-        String formBasedConfig = "loginUrl=" + URLEncoder.encode(siteUrl, "UTF-8") +
-                "&loginRequestData=" + URLEncoder.encode(loginRequest, "UTF-8");
+        String formBasedConfig = "loginUrl=" + URLEncoder.encode(siteUrl, StandardCharsets.UTF_8) +
+                "&loginRequestData=" + URLEncoder.encode(loginRequest, StandardCharsets.UTF_8);
         this.clientApi.authentication.setAuthenticationMethod(CONTEXT_ID, authentication, formBasedConfig);
         // Check if everything is set up ok
-        LOGGER.info("Authentication Setup: " + clientApi.authentication.getAuthenticationMethod(CONTEXT_ID).toString(0));
+        LOGGER.info("Authentication Setup: {}", clientApi.authentication.getAuthenticationMethod(CONTEXT_ID).toString(0));
     }
 
     public void createUser(String userName) throws ClientApiException {
@@ -207,8 +204,8 @@ public class ScannerMethods {
     public void authenticateUser(String username, String password) throws Exception {
         user = "VOLUser";
 
-        String userAuthConfig = "username=" + URLEncoder.encode(username, "UTF-8") +
-                "&password=" + URLEncoder.encode(password, "UTF-8");
+        String userAuthConfig = "username=" + URLEncoder.encode(username, StandardCharsets.UTF_8) +
+                "&password=" + URLEncoder.encode(password, StandardCharsets.UTF_8);
 
         userId = extractUserId(clientApi.users.newUser(CONTEXT_ID, user));
 
@@ -216,7 +213,7 @@ public class ScannerMethods {
         this.clientApi.users.setAuthenticationCredentials(CONTEXT_ID, userId, userAuthConfig);
 
         // Check if everything is set up ok
-        LOGGER.info("Authentication config: " + clientApi.users.getUserById(CONTEXT_ID, userId).toString(0));
+        LOGGER.info("Authentication config: {}", clientApi.users.getUserById(CONTEXT_ID, userId).toString(0));
     }
 
     public void authenticateAsUser(String contextId, String userId) throws ClientApiException {
@@ -363,6 +360,7 @@ public class ScannerMethods {
     }
 
     public void setPolicyAttackStrength(String policyId, String attackStrength) throws Exception {
+        String DEFAULT_POLICY = "Default Policy";
         this.clientApi.ascan.setPolicyAttackStrength(policyId, attackStrength.toUpperCase(), DEFAULT_POLICY);
     }
     /**
@@ -382,14 +380,14 @@ public class ScannerMethods {
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.spider.status(scanId)).getValue());
-            LOGGER.info("Static scan in progress : " + progress + "%");
+            LOGGER.info("Static scan in progress : {}%", progress);
             if (progress == 100) {
                 break;
             }
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
         }
     }
@@ -402,14 +400,14 @@ public class ScannerMethods {
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) clientApi.ascan.status(scanId)).getValue());
-            LOGGER.info("Dynamic scan in progress : " + progress + "%");
+            LOGGER.info("Authenticated Dynamic scan in progress : {}%", progress);
             if (progress == 100) {
                 break;
             }
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
         }
     }
@@ -423,14 +421,14 @@ public class ScannerMethods {
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.ajaxSpider.status()).getValue());
-            LOGGER.info("Ajax scan in progress : " + progress + "%");
+            LOGGER.info("Ajax scan in progress : {}%", progress);
             if (progress == 100) {
                 break;
             }
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
         }
     }
@@ -445,14 +443,14 @@ public class ScannerMethods {
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.spider.status(scanId)).getValue());
-            LOGGER.info("Static scan in progress : " + progress + "%");
+            LOGGER.info("Spider Static scan in progress : {}%", progress);
             if (progress == 100) {
                 break;
             }
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
         }
     }
@@ -473,7 +471,7 @@ public class ScannerMethods {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
         }
     }
