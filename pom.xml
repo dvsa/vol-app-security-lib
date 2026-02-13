@@ -7,11 +7,11 @@
   <version>1.0.2-SNAPSHOT</version>
 
   <properties>
-    <apache-log4j.version>2.24.3</apache-log4j.version>
+    <apache-log4j.version>2.25.3</apache-log4j.version>
     <zap-clientapi.version>1.16.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.8.1</maven.compiler.version>
-   <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
+    <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
   </properties>
 
   <build>
@@ -32,6 +32,12 @@
       <groupId>org.zaproxy</groupId>
       <artifactId>zap-clientapi</artifactId>
       <version>${zap-clientapi.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
