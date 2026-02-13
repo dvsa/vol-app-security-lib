@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/dvsa/vol-app-security-lib/compare/v1.0.1...v1.1.0) (2026-02-13)
+
+
+### Features
+
+* up deps, override jdom ([0bbac3a](https://github.com/dvsa/vol-app-security-lib/commit/0bbac3a2880456f9b3f6d4390cc4cb6998883af2))
+* up deps, override jdom ([d5c507b](https://github.com/dvsa/vol-app-security-lib/commit/d5c507bcc014ac8be662b078f4b60007f9ee8a28))
+
 ## [1.0.1](https://github.com/dvsa/vol-app-security-lib/compare/v1.0.0...v1.0.1) (2025-05-20)
 
 
