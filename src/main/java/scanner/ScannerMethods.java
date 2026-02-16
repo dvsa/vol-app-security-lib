@@ -236,10 +236,7 @@ public class ScannerMethods {
     }
 
     private static String extractUserId(ApiResponse response) {
-        return switch (response) {
-            case ApiResponseElement element -> element.getValue();
-            default -> throw new IllegalArgumentException("Unexpected response type: " + response.getClass());
-        };
+        return ((ApiResponseElement) response).getValue();
     }
 
 
