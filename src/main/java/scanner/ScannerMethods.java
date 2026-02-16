@@ -34,7 +34,7 @@ public class ScannerMethods {
      * Method for creating summary table for HTML report
      */
     private String createReportSummaryTable() {
-        return """
+        return String.format("""
                 <table width=45%% border=0>
                 <tr bgcolor=#666666>
                 <td width=45%% height=24>
@@ -49,7 +49,7 @@ public class ScannerMethods {
                 <p></p>
                 <p></p>
                 <p></p>
-                <p></p>""".formatted(this.reportURL, this.reportURL);
+                <p></p>""", this.reportURL, this.reportURL);
     }
 
     /**
@@ -68,11 +68,11 @@ public class ScannerMethods {
         ApiResponseList apiResponseList = (ApiResponseList) response;
         for (ApiResponse apiResponse : apiResponseList.getItems()) {
             if (apiResponse instanceof ApiResponseSet serverResponse) {
-                stringBuilder.append("""
+                stringBuilder.append(String.format("""
                         <tr bgcolor=#e8e8e8>
                         <td width=100><p>%s</p></td>
                         <td width=100><p>%s</p></td>
-                        </tr>""".formatted(
+                        </tr>""",
                         serverResponse.getStringValue("requestHeader"),
                         serverResponse.getStringValue("responseHeader")));
             }
@@ -94,8 +94,8 @@ public class ScannerMethods {
         }
         try {
             this.clientApi.reports.generate(reportName, "traditional-html", null, null, null,
-                    null, null, null, null, "%s%s -%d".formatted(reportName, date, seconds), null, 
-                    "%s/%s".formatted(System.getProperty("user.dir"), dir), null);
+                    null, null, null, null, String.format("%s%s -%d", reportName, date, seconds), null, 
+                    String.format("%s/%s", System.getProperty("user.dir"), dir), null);
         } catch (ClientApiException e) {
             LOGGER.info(e);
         }
@@ -169,7 +169,7 @@ public class ScannerMethods {
      */
     public void setAuthenticationMethod(String siteUrl, String loginRequest, String authentication) throws Exception {
 
-        String formBasedConfig = "loginUrl=%s&loginRequestData=%s".formatted(
+        String formBasedConfig = String.format("loginUrl=%s&loginRequestData=%s",
                 URLEncoder.encode(siteUrl, StandardCharsets.UTF_8),
                 URLEncoder.encode(loginRequest, StandardCharsets.UTF_8));
         this.clientApi.authentication.setAuthenticationMethod(CONTEXT_ID, authentication, formBasedConfig);
@@ -218,7 +218,7 @@ public class ScannerMethods {
     public void authenticateUser(String username, String password) throws Exception {
         user = "VOLUser";
 
-        String userAuthConfig = "username=%s&password=%s".formatted(
+        String userAuthConfig = String.format("username=%s&password=%s",
                 URLEncoder.encode(username, StandardCharsets.UTF_8),
                 URLEncoder.encode(password, StandardCharsets.UTF_8));
 
