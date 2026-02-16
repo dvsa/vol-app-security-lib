@@ -34,15 +34,22 @@ public class ScannerMethods {
      * Method for creating summary table for HTML report
      */
     private String createReportSummaryTable() {
-        return "<table width=45% border=0>" + "<tr bgcolor=#666666>" +
-                "<td width=45% height=24>" + "<strong>" + "<font color=#FFFFFF size=2 face=Arial, Helvetica, sans-serif>URLs SCANNED" + "</font></strong></td></tr>" +
-                "<tr bgcolor=#e8e8e8>" +
-                String.format("<td><font size=2 face=Arial, Helvetica, sans-serif><a href=#%s>%s</a></font></td>", this.reportURL, this.reportURL) +
-                "</tr>" +
-                "<p></p>" +
-                "<p></p>" +
-                "<p></p>" +
-                "<p></p>";
+        return """
+                <table width=45%% border=0>
+                <tr bgcolor=#666666>
+                <td width=45%% height=24>
+                <strong>
+                <font color=#FFFFFF size=2 face=Arial, Helvetica, sans-serif>URLs SCANNED</font>
+                </strong>
+                </td>
+                </tr>
+                <tr bgcolor=#e8e8e8>
+                <td><font size=2 face=Arial, Helvetica, sans-serif><a href=#%s>%s</a></font></td>
+                </tr>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>""".formatted(this.reportURL, this.reportURL);
     }
 
     /**
@@ -50,20 +57,25 @@ public class ScannerMethods {
      */
     private String headersAndResponseSummaryTable() throws ClientApiException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<table width=45% border=0>")
-                .append("<tr bgcolor=#666666>")
-                .append("<h3>Server Requests and Responses</h3>").append("<div class=spacer></div>")
-                .append("<td width=50%>Request</td>")
-                .append("<td width=50%><p>Response</p></td>");
+        stringBuilder.append("""
+                <table width=45%% border=0>
+                <tr bgcolor=#666666>
+                <h3>Server Requests and Responses</h3><div class=spacer></div>
+                <td width=50%%>Request</td>
+                <td width=50%%><p>Response</p></td>""");
 
         response = this.clientApi.core.messages(this.reportURL, "-1", "-1");
         ApiResponseList apiResponseList = (ApiResponseList) response;
         for (ApiResponse apiResponse : apiResponseList.getItems()) {
-            ApiResponseSet serverResponse = (ApiResponseSet) apiResponse;
-            stringBuilder.append("<tr bgcolor=#e8e8e8>")
-                    .append(String.format("<td width=100><p>%s</p></td>", serverResponse.getStringValue("requestHeader")))
-                    .append(String.format("<td width=100><p>%s</p></td>", serverResponse.getStringValue("responseHeader")))
-                    .append("</tr>");
+            if (apiResponse instanceof ApiResponseSet serverResponse) {
+                stringBuilder.append("""
+                        <tr bgcolor=#e8e8e8>
+                        <td width=100><p>%s</p></td>
+                        <td width=100><p>%s</p></td>
+                        </tr>""".formatted(
+                        serverResponse.getStringValue("requestHeader"),
+                        serverResponse.getStringValue("responseHeader")));
+            }
         }
         return stringBuilder.toString();
     }
@@ -82,7 +94,8 @@ public class ScannerMethods {
         }
         try {
             this.clientApi.reports.generate(reportName, "traditional-html", null, null, null,
-                    null, null, null, null, reportName.concat(date + " -" + seconds), null, System.getProperty("user.dir").concat("/" + dir), null);
+                    null, null, null, null, "%s%s -%d".formatted(reportName, date, seconds), null, 
+                    "%s/%s".formatted(System.getProperty("user.dir"), dir), null);
         } catch (ClientApiException e) {
             LOGGER.info(e);
         }
@@ -156,8 +169,9 @@ public class ScannerMethods {
      */
     public void setAuthenticationMethod(String siteUrl, String loginRequest, String authentication) throws Exception {
 
-        String formBasedConfig = "loginUrl=" + URLEncoder.encode(siteUrl, StandardCharsets.UTF_8) +
-                "&loginRequestData=" + URLEncoder.encode(loginRequest, StandardCharsets.UTF_8);
+        String formBasedConfig = "loginUrl=%s&loginRequestData=%s".formatted(
+                URLEncoder.encode(siteUrl, StandardCharsets.UTF_8),
+                URLEncoder.encode(loginRequest, StandardCharsets.UTF_8));
         this.clientApi.authentication.setAuthenticationMethod(CONTEXT_ID, authentication, formBasedConfig);
         // Check if everything is set up ok
         LOGGER.info("Authentication Setup: {}", clientApi.authentication.getAuthenticationMethod(CONTEXT_ID).toString(0));
@@ -204,8 +218,9 @@ public class ScannerMethods {
     public void authenticateUser(String username, String password) throws Exception {
         user = "VOLUser";
 
-        String userAuthConfig = "username=" + URLEncoder.encode(username, StandardCharsets.UTF_8) +
-                "&password=" + URLEncoder.encode(password, StandardCharsets.UTF_8);
+        String userAuthConfig = "username=%s&password=%s".formatted(
+                URLEncoder.encode(username, StandardCharsets.UTF_8),
+                URLEncoder.encode(password, StandardCharsets.UTF_8));
 
         userId = extractUserId(clientApi.users.newUser(CONTEXT_ID, user));
 
@@ -221,7 +236,10 @@ public class ScannerMethods {
     }
 
     private static String extractUserId(ApiResponse response) {
-        return ((ApiResponseElement) response).getValue();
+        return switch (response) {
+            case ApiResponseElement element -> element.getValue();
+            default -> throw new IllegalArgumentException("Unexpected response type: " + response.getClass());
+        };
     }
 
 
@@ -258,81 +276,32 @@ public class ScannerMethods {
      * @param policyName Policy Ids to be used when scanning
      */
     public String setPolicyId(String policyName) {
-        String scannerId;
-        switch (policyName) {
-            case "directory-browsing":
-                scannerId = "0";
-                break;
-            case "cross-site-scripting":
-                scannerId = "40012,40014,40016,40017";
-                break;
-            case "sql-injection":
-                scannerId = "40018";
-                break;
-            case "path-traversal":
-                scannerId = "6";
-                break;
-            case "remote-file-inclusion":
-                scannerId = "7";
-                break;
-            case "server-side-include":
-                scannerId = "40009";
-                break;
-            case "script-active-scan-rules":
-                scannerId = "50000";
-                break;
-            case "server-side-code-injection":
-                scannerId = "90019";
-                break;
-            case "remote-os-command-injection":
-                scannerId = "90020";
-                break;
-            case "external-redirect":
-                scannerId = "20019";
-                break;
-            case "crlf-injection":
-                scannerId = "40003";
-                break;
-            case "source-code-disclosure":
-                scannerId = "42,10045,20017";
-                break;
-            case "shell-shock":
-                scannerId = "10048";
-                break;
-            case "remote-code-execution":
-                scannerId = "20018";
-                break;
-            case "ldap-injection":
-                scannerId = "40015";
-                break;
-            case "xpath-injection":
-                scannerId = "90021";
-                break;
-            case "xml-external-entity":
-                scannerId = "90023";
-                break;
-            case "padding-oracle":
-                scannerId = "90024";
-                break;
-            case "el-injection":
-                scannerId = "90025";
-                break;
-            case "insecure-http-methods":
-                scannerId = "90028";
-                break;
-            case "parameter-pollution":
-                scannerId = "20014";
-                break;
-            case "parameter-tampering":
-                scannerId = "40008";
-                break;
-            case "SOAP XML Injection":
-                scannerId = "90029";
-                break;
-            default:
-                throw new RuntimeException("No policy id found for: " + policyName);
-        }
-        return scannerId;
+        return switch (policyName) {
+            case "directory-browsing" -> "0";
+            case "cross-site-scripting" -> "40012,40014,40016,40017";
+            case "sql-injection" -> "40018";
+            case "path-traversal" -> "6";
+            case "remote-file-inclusion" -> "7";
+            case "server-side-include" -> "40009";
+            case "script-active-scan-rules" -> "50000";
+            case "server-side-code-injection" -> "90019";
+            case "remote-os-command-injection" -> "90020";
+            case "external-redirect" -> "20019";
+            case "crlf-injection" -> "40003";
+            case "source-code-disclosure" -> "42,10045,20017";
+            case "shell-shock" -> "10048";
+            case "remote-code-execution" -> "20018";
+            case "ldap-injection" -> "40015";
+            case "xpath-injection" -> "90021";
+            case "xml-external-entity" -> "90023";
+            case "padding-oracle" -> "90024";
+            case "el-injection" -> "90025";
+            case "insecure-http-methods" -> "90028";
+            case "parameter-pollution" -> "20014";
+            case "parameter-tampering" -> "40008";
+            case "SOAP XML Injection" -> "90029";
+            default -> throw new RuntimeException("No policy id found for: " + policyName);
+        };
     }
 
     public void enableAllPassiveScanners() throws Exception {
@@ -464,7 +433,7 @@ public class ScannerMethods {
         scanId = ((ApiResponseElement) response).getValue();
         while (true) {
             progress = Integer.parseInt(((ApiResponseElement) this.clientApi.ascan.status(scanId)).getValue());
-            LOGGER.info("Dynamic scan in progress : " + progress + "%");
+            LOGGER.info("Dynamic scan in progress : {}%", progress);
             if (progress == 100) {
                 break;
             }

@@ -10,7 +10,7 @@
     <apache-log4j.version>2.25.3</apache-log4j.version>
     <zap-clientapi.version>1.16.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.version>3.8.1</maven.compiler.version>
+    <maven.compiler.version>3.11.0</maven.compiler.version>
     <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
   </properties>
 
@@ -21,7 +21,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compiler.version}</version>
         <configuration>
-          <release>11</release>
+          <release>21</release>
         </configuration>
       </plugin>
     </plugins>
