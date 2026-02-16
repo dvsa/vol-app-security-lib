@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/dvsa/vol-app-security-lib/compare/v1.1.0...v1.1.1) (2026-02-16)
+
+
+### Bug Fixes
+
+* bump ([8ce9ded](https://github.com/dvsa/vol-app-security-lib/commit/8ce9dedb6852672463582a6b1a0e1c14e2cc0cae))
+* bump ([15e0a61](https://github.com/dvsa/vol-app-security-lib/commit/15e0a6196d2429f6f3b8922d9bc290d044d56106))
+
 ## [1.1.0](https://github.com/dvsa/vol-app-security-lib/compare/v1.0.1...v1.1.0) (2026-02-13)
 
 
