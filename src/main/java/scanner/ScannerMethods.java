@@ -94,7 +94,7 @@ public class ScannerMethods {
         }
         try {
             this.clientApi.reports.generate(reportName, "traditional-html", null, null, null,
-                    null, null, null, null, String.format("%s%s -%d", reportName, date, seconds), null, 
+                    null, null, null, null, String.format("%s%s - %d", reportName, date, seconds), null, 
                     String.format("%s/%s", System.getProperty("user.dir"), dir), null);
         } catch (ClientApiException e) {
             LOGGER.info(e);
