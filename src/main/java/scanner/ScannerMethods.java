@@ -46,10 +46,7 @@ public class ScannerMethods {
                 <tr bgcolor=#e8e8e8>
                 <td><font size=2 face=Arial, Helvetica, sans-serif><a href=#%s>%s</a></font></td>
                 </tr>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>""", this.reportURL, this.reportURL);
+                </table>""", this.reportURL, this.reportURL);
     }
 
     /**
@@ -58,11 +55,13 @@ public class ScannerMethods {
     private String headersAndResponseSummaryTable() throws ClientApiException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("""
+                <h3>Server Requests and Responses</h3>
+                <div class=spacer></div>
                 <table width=45%% border=0>
                 <tr bgcolor=#666666>
-                <h3>Server Requests and Responses</h3><div class=spacer></div>
                 <td width=50%%>Request</td>
-                <td width=50%%><p>Response</p></td>""");
+                <td width=50%%>Response</td>
+                </tr>""");
 
         response = this.clientApi.core.messages(this.reportURL, "-1", "-1");
         ApiResponseList apiResponseList = (ApiResponseList) response;
@@ -77,6 +76,7 @@ public class ScannerMethods {
                         serverResponse.getStringValue("responseHeader")));
             }
         }
+        stringBuilder.append("</table>");
         return stringBuilder.toString();
     }
 
@@ -94,8 +94,8 @@ public class ScannerMethods {
         }
         try {
             this.clientApi.reports.generate(reportName, "traditional-html", null, null, null,
-                    null, null, null, null, String.format("%s%s -%d", reportName, date, seconds), null, 
-                    String.format("%s/%s", System.getProperty("user.dir"), dir), null);
+                    null, null, null, null, String.format("%s%s - %d", reportName, date, seconds), null, 
+                    new File(System.getProperty("user.dir"), dir.getName()).getAbsolutePath(), null);
         } catch (ClientApiException e) {
             LOGGER.info(e);
         }

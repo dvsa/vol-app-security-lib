@@ -11,8 +11,6 @@
     <zap-clientapi.version>1.17.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.13.0</maven.compiler.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
     <github.url>https://maven.pkg.github.com/dvsa/vol-app-security-lib</github.url>
   </properties>
 
@@ -23,8 +21,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compiler.version}</version>
         <configuration>
-          <source>17</source>
-          <target>17</target>
+          <release>17</release>
         </configuration>
       </plugin>
     </plugins>
