@@ -8,7 +8,7 @@
 
   <properties>
     <apache-log4j.version>2.25.3</apache-log4j.version>
-    <zap-clientapi.version>1.16.0</zap-clientapi.version>
+    <zap-clientapi.version>1.17.0</zap-clientapi.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.13.0</maven.compiler.version>
     <maven.compiler.source>21</maven.compiler.source>
